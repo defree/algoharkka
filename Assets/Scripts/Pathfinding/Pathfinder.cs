@@ -24,7 +24,7 @@ public class Pathfinder : MonoBehaviour {
 		neighbours = new List<Cell>();
 	}
 
-	private void findCellNeighbours() {
+	private void findCellNeighbours() { //Etsitään naapuriruudut voihin voidaan mennä
 		neighbours.Clear();
 		Vector2 coords = current.coordinates;
 
@@ -47,19 +47,17 @@ public class Pathfinder : MonoBehaviour {
 			neighbours.Add(map[x,y+1]);
 		}
 		//Debug.Log ("current: x"+current.coordinates.x+",y"+current.coordinates.y);
-		//Debug.Log ("neighbours count:"+neighbours.Count);
+		Debug.Log ("neighbours count:"+neighbours.Count);
 	}
 
-	private bool matchPos(Cell one, Cell two) {
+	private bool matchPos(Cell one, Cell two) {	//Jos koordinaatit mätsäävät
 		return ((one.coordinates.x == two.coordinates.x) && (one.coordinates.y == two.coordinates.y));
 	}
 
 	private void findPathList() {
 		int count = 0;
-		int currentDistx = (int) Mathf.Abs(current.coordinates.x - target.coordinates.x);
-		int currentDisty = (int) Mathf.Abs(current.coordinates.y - target.coordinates.y);
 
-		while ((!matchPos(current,target)) && (count != 50)) {
+		while ((!matchPos(current,target)) && (count != 10)) { //Tän kanssa varmaa vielä vähä häikkää. Rupee menemää edestakas kahden välil 
 			findCellNeighbours ();
 			Cell closestToTargetOnX = current;
 			Cell closestToTargetOnY = current;
@@ -84,7 +82,7 @@ public class Pathfinder : MonoBehaviour {
 			//Debug.Log ("y"+disty);
 
 
-			if ((distx != 0) && (disty != 0)) {
+			if ((distx != 0) && (disty != 0)) { //Valitaan mihin celliin siirrytään. On kyl vähän sirkus
 				if ((distx < disty)) {
 					path.Add(closestToTargetOnX);
 					//Debug.Log("add x");
@@ -99,14 +97,17 @@ public class Pathfinder : MonoBehaviour {
 					}
 				}
 			else {
-				if ((distx == 0)) path.Add(closestToTargetOnY);
-				if ((disty == 0)) path.Add(closestToTargetOnX);
+				if ((distx == 0) && (current.coordinates.x !=0)) path.Add(closestToTargetOnX); 
+				else if ((distx == 0)) path.Add(closestToTargetOnY);
+
+				else if ((disty == 0) && (current.coordinates.y !=0)) path.Add(closestToTargetOnY);
+				else path.Add(closestToTargetOnX);
 			}
 
 
 			previous = current;
 			current = path[path.Count-1];
-			//Debug.Log ("move to: x"+current.coordinates.x+",y"+current.coordinates.y);
+			Debug.Log ("move to: x"+current.coordinates.x+",y"+current.coordinates.y);
 		}
 
 	}
