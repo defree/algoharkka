@@ -77,24 +77,33 @@ using System.Collections.Generic;
 			List<Cell> movePath = FindPath (grid[trax,tray],grid[targetx,targety]);
 
 			Cell nextCell = movePath [0]; 
+		/*foreach (Cell c in movePath) {
+				//Debug.Log (c.coordinates.x+","+c.coordinates.y+","+c.IsWalkable());
+				
+			}
 			
-			Debug.Log (nextCell.coordinates.x+","+nextCell.coordinates.y+","+nextCell.IsWalkable());
+			for (int x = 0; x < 8; x++) {
+						//Loop along y axis, starting from -1 to place floor or outerwall tiles.
+				for (int y = 0; y < 8; y++) {	
+					Debug.Log(x+","+y+","+grid[x,y].IsWalkable());
+				}
+			}
+			*/
 			
-			//xDir = target.position.x > nextCell.coordinates.x ? 1 : -1;
-			//yDir = target.position.y > nextCell.coordinates.y ? 1 : -1;
+
 			
-			
+
 			//If the difference in positions is approximately zero (Epsilon) do the following:
-			if(Mathf.Abs (target.position.x - nextCell.coordinates.x) < float.Epsilon)
+			if(Mathf.Abs (nextCell.coordinates.x - transform.position.x) < float.Epsilon)
 				
 				//If the y coordinate of the target's (player) position is greater than the y coordinate of this enemy's position set y direction 1 (to move up). If not, set it to -1 (to move down).
-				yDir = target.position.y > nextCell.coordinates.y ? 1 : -1;
+				yDir = nextCell.coordinates.y > transform.position.y ? 1 : -1;
 			
 			//If the difference in positions is not approximately zero (Epsilon) do the following:
 			else
 				//Check if target x position is greater than enemy's x position, if so set x direction to 1 (move right), if not set to -1 (move left).
-				xDir = target.position.x > nextCell.coordinates.x ? 1 : -1;
-			
+				xDir = nextCell.coordinates.x > transform.position.x ? 1 : -1;
+				
 			//Call the AttemptMove function and pass in the generic parameter Player, because Enemy is moving and expecting to potentially encounter a Player
 			AttemptMove <Player> (xDir, yDir);
 		}
@@ -116,11 +125,16 @@ using System.Collections.Generic;
 			//Call the RandomizeSfx function of SoundManager passing in the two audio clips to choose randomly between.
 			SoundManager.instance.RandomizeSfx (attackSound1, attackSound2);
 		}
-
+		
+		protected List<Cell> FindPath(Cell origin, Cell goal) {
+			Pathfinder find = new Pathfinder (origin,goal,grid);
+			return find.findPath ();
+		}
+		/*
 		protected List<Cell> FindPath(Cell origin, Cell goal) {
 			AStar pathFinder = new AStar();
 			pathFinder.FindPath (origin, goal, grid, false);
 			return pathFinder.CellsFromPath ();
 		}
-	}
-
+		*/
+}
