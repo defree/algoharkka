@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Pathfinder : MonoBehaviour {
+public class Pathfinder {
 
 	private Cell start;
 	private Cell target;

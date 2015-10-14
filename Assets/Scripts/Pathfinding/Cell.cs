@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Cell : MonoBehaviour {
+public class Cell {
 
 
 	public Vector2 coordinates;
