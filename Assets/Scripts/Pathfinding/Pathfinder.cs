@@ -10,6 +10,8 @@ public class Pathfinder : MonoBehaviour {
 
 	private Cell current;
 	private Cell previous;
+	private int size;
+
 	private List<Cell> path;
 	private List<Cell> neighbours;
 
@@ -19,6 +21,7 @@ public class Pathfinder : MonoBehaviour {
 		this.map = map;
 		current = start;
 		previous = current;
+		size = map.GetLength (0);
 
 		path = new List<Cell>();
 		neighbours = new List<Cell>();
@@ -47,7 +50,7 @@ public class Pathfinder : MonoBehaviour {
 			neighbours.Add(map[x,y+1]);
 		}
 		//Debug.Log ("current: x"+current.coordinates.x+",y"+current.coordinates.y);
-		Debug.Log ("neighbours count:"+neighbours.Count);
+		//Debug.Log ("neighbours count:"+neighbours.Count);
 	}
 
 	private bool matchPos(Cell one, Cell two) {	//Jos koordinaatit mätsäävät
@@ -57,51 +60,64 @@ public class Pathfinder : MonoBehaviour {
 	private void findPathList() {
 		int count = 0;
 
-		while ((!matchPos(current,target)) && (count != 10)) { //Tän kanssa varmaa vielä vähä häikkää. Rupee menemää edestakas kahden välil 
+		while ((!matchPos(current,target)) && (count != 10)) {
 			findCellNeighbours ();
 			Cell closestToTargetOnX = current;
 			Cell closestToTargetOnY = current;
-			int distx = 8;
-			int disty = 8;
+			int distx = size;
+			int disty = size;
 			count++;
 
-			foreach(Cell c in neighbours) {
+			foreach(Cell c in neighbours) { //Etsitään cellit jotka ovat lähimpänä targettia
 				if (!matchPos(c,previous) || neighbours.Count == 1) {
 					if (Mathf.Abs(c.coordinates.x - target.coordinates.x) < distx) {
-						distx = (int) Mathf.Abs(c.coordinates.x - (int) target.coordinates.x);
+						distx = (int) Mathf.Abs(c.coordinates.x - target.coordinates.x);
 						closestToTargetOnX = c;
 					}
 					if (Mathf.Abs(c.coordinates.y - target.coordinates.y) < disty) {
-						disty = (int) Mathf.Abs(c.coordinates.y - (int) target.coordinates.y);
+						disty = (int) Mathf.Abs(c.coordinates.y - target.coordinates.y);
 						closestToTargetOnY = c;
 					}
 				}
 			}
 
-			//Debug.Log ("x"+distx);
-			//Debug.Log ("y"+disty);
+			Debug.Log ("x"+distx);
+			Debug.Log ("y"+disty);
 
 
 			if ((distx != 0) && (disty != 0)) { //Valitaan mihin celliin siirrytään. On kyl vähän sirkus
 				if ((distx < disty)) {
 					path.Add(closestToTargetOnX);
-					//Debug.Log("add x");
+					//Debug.Log("route a-a");
 				}
 				else if ((disty < distx)) {
 					path.Add(closestToTargetOnY);
-					//Debug.Log("add y");
+					//Debug.Log("route a-b");
 				}
 				else {
-					//Debug.Log ("add 0");
+					//Debug.Log ("route a-c");
 					path.Add(neighbours[0]);
 					}
 				}
 			else {
-				if ((distx == 0) && (current.coordinates.x !=0)) path.Add(closestToTargetOnX); 
-				else if ((distx == 0)) path.Add(closestToTargetOnY);
+				if ((distx == 0) && (current.coordinates.x != target.coordinates.x)) {
+					//Debug.Log ("route b-a");
+					path.Add(closestToTargetOnX); 
+				}
 
-				else if ((disty == 0) && (current.coordinates.y !=0)) path.Add(closestToTargetOnY);
-				else path.Add(closestToTargetOnX);
+				else if ((distx == 0)) {
+					//Debug.Log ("route b-b");
+					path.Add(closestToTargetOnY);
+				}
+
+				else if ((disty == 0) && (current.coordinates.y != target.coordinates.y)) {
+					//Debug.Log ("route b-c");
+					path.Add(closestToTargetOnY);
+				}
+				else {
+					//Debug.Log ("route b-d");
+					path.Add(closestToTargetOnX);
+				}
 			}
 
 
