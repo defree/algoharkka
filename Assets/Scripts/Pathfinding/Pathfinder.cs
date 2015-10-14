@@ -60,6 +60,8 @@ public class Pathfinder : MonoBehaviour {
 	private void findPathList() {
 		int count = 0;
 
+		if (matchPos (start, target)) Debug.Log ("Alku ja loppu positionit samat!");
+
 		while ((!matchPos(current,target)) && (count != 10)) {
 			findCellNeighbours ();
 			Cell closestToTargetOnX = current;
@@ -81,8 +83,8 @@ public class Pathfinder : MonoBehaviour {
 				}
 			}
 
-			Debug.Log ("x"+distx);
-			Debug.Log ("y"+disty);
+			//Debug.Log ("x"+distx);
+			//Debug.Log ("y"+disty);
 
 
 			if ((distx != 0) && (disty != 0)) { //Valitaan mihin celliin siirrytään. On kyl vähän sirkus
